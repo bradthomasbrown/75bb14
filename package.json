@@ -1,0 +1,25 @@
+{
+    "name": "@bradthomasbrown/75bb14",
+    "description": "A light, flexible, convenience layer library for `EvmEntity`s and (EVM) Nodes in JavaScript/TypeScript.",
+    "version": "1.0.0",
+    "author": "Brad Brown <https://t.me/bradthomasbrown>",
+    "type": "module",
+    "files": [
+        "dist/"
+    ],
+    "exports": {
+        ".": "./dist/75bb14.js",
+        "./e4e1df": "./dist/concrete/e4e1df.js"
+    },
+    "dependencies": {
+        "@bradthomasbrown/ecdsa": "^2.0.1",
+        "@bradthomasbrown/ejra": "^1.0.6",
+        "@bradthomasbrown/entity": "^1.0.1",
+        "@bradthomasbrown/keccak": "^1.0.1",
+        "@bradthomasbrown/rlp": "^1.0.0"
+    },
+    "devDependencies": {
+        "@bradthomasbrown/900ef2": "^1.0.0",
+        "@types/bun": "^1.3.5"
+    }
+}
