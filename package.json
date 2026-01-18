@@ -9,7 +9,8 @@
     ],
     "exports": {
         ".": "./dist/75bb14.js",
-        "./e4e1df": "./dist/concrete/e4e1df.js"
+        "./e4e1df": "./dist/concrete/e4e1df.js",
+        "./dd2554": "./dist/concrete/dd2554.js"
     },
     "dependencies": {
         "@bradthomasbrown/ecdsa": "^2.0.2",
