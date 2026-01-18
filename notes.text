@@ -1,0 +1,12 @@
+75bb14 is insufficient
+the returned class' send function doesn't allow for specification of a gas value
+in our local dev testing, we seem to like just setting a very high gas
+this is also common in other testing environments we've seen, like Remix
+we also might explicitly want to avoid estimating gas,
+ since it seems to error (not confirmed) on reverts
+in our local dev testing, we get a lot of information from reverts, so these should be allowed,
+ further showing why we might want to input a manual gas value and not estimate gas
+but if we can manully input gas
+ why not manually input anything else?
+ it seems like we might want to input potentially any combination of things
+ this also only supports one transaction type for now, which is the legacy type
