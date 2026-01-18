@@ -1,59 +1,41 @@
-import type { Node } from "@bradthomasbrown/ejra";
 import { _75bb14_ } from "../75bb14.js";
+import sendLegacyTransaction from "../lib/sendLegacyTransaction.js";
 
-function _4403dc_(_d2_:InstanceType<ReturnType<typeof _75bb14_>>) {
-    return _d2_.node.getTransactionCount(_d2_.entity.address, "latest");
-}
-
-function _0da055_(_ce_:InstanceType<ReturnType<typeof _75bb14_>>) {
-    return _ce_.node.gasPrice();
-}
-
-function _422b72_(
-    _d6_:InstanceType<ReturnType<typeof _75bb14_>>,
-    _fa_:null|string,
-    _01_:null|string
+async function send(
+    _state:null,
+    node:InstanceType<ReturnType<typeof _75bb14_>>["node"],
+    entity:InstanceType<ReturnType<typeof _75bb14_>>["entity"],
+    to:null|string,
+    value:bigint,
+    input:null|ArrayBuffer
 ) {
-    const _5b_:Parameters<typeof _d6_["node"]["estimateGas"]>[0] = {};
-    _5b_.from = _d6_.entity.address;
-    if (_fa_ !== null) _5b_.to = _fa_;
-    if (_01_ !== null) _5b_.input = _01_;
-    return _d6_.node.estimateGas(_5b_, "latest");
+    const nonce = await node.getTransactionCount(entity.address, "latest");
+    const gasPrice = await node.gasPrice();
+    const inputBytes = input === null ? new Uint8Array() : new Uint8Array(input);
+    const inputHex = `0x${inputBytes.toHex()}`;
+    let _ca_ = { from:entity.address, value:`0x${value.toString(16)}` } as any;
+    if (to !== null) _ca_.to = to;
+    if (input !== null) _ca_.input = inputHex;
+    const gasLimit = await node.estimateGas(_ca_, "latest");
+    const toBytes = to !== null ? Uint8Array.fromHex(to.slice(2)) : new Uint8Array();
+    const chainId = await node.chainId();
+    return sendLegacyTransaction(node, entity, nonce, gasPrice, gasLimit, toBytes, value, inputBytes, chainId);
 }
 
-function _e752dc_(_80_:null|string) {
-    if (_80_ === null) return new Uint8Array();
-    if (_80_.startsWith("0x")) return Uint8Array.fromHex(_80_.slice(2));
-    return Uint8Array.fromHex(_80_);
-}
-
-function _e4aeae_(_ef_:InstanceType<ReturnType<typeof _75bb14_>>) {
-    return _ef_.node.chainId();
-}
-
-function _3c6f98_() {}
-
-async function _022a28_(_ad_:InstanceType<ReturnType<typeof _75bb14_>>, _85_:string) {
-    let receipt:Awaited<ReturnType<InstanceType<typeof Node>["getTransactionReceipt"]>>;
+async function wait(
+    _state:null,
+    node:InstanceType<ReturnType<typeof _75bb14_>>["node"],
+    _entity:InstanceType<ReturnType<typeof _75bb14_>>["entity"],
+    transactionHash:string
+) {
+    let receipt:Awaited<ReturnType<InstanceType<ReturnType<typeof _75bb14_>>["node"]["getTransactionReceipt"]>>;
     for (let i = 0; i < 5; i++) {
-        receipt = await _ad_.node.getTransactionReceipt(_85_);
-        if (receipt != null) return receipt;
+        receipt = await node.getTransactionReceipt(transactionHash);
+        if (receipt !== null) return receipt;
         await new Promise(r => setTimeout(r, 250));
     }
-    throw new Error(`failed to wait for receipt from transaction hash: ${_85_}`);
 }
 
-/**
- * A simple 75bb14 which will:
- * - get the most recently available nonce from the node for each transaction
- * - get the most recently available gas price from the node for each transaction
- * - get the gas estimate from the node for each transaction
- * - get the chain id from the node for each transaction
- * without batching,
- * and will perform a simple 5-attempt 250-ms delay poll for a transaction reciept from the node as a wait condition.
- *
- * "Good enough" for local development work, maybe.
- */
-const _e4e1df_ = _75bb14_(_4403dc_, _0da055_, _422b72_, _e752dc_, _e752dc_, _e4aeae_, _3c6f98_, _022a28_);
+const _e4e1df_ = _75bb14_(send, wait);
 
 export { _e4e1df_ };
