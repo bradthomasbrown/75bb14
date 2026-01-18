@@ -1,7 +1,7 @@
 {
     "name": "@bradthomasbrown/75bb14",
     "description": "A light, flexible, convenience layer library for `EvmEntity`s and (EVM) Nodes in JavaScript/TypeScript.",
-    "version": "1.0.1",
+    "version": "2.0.0",
     "author": "Brad Brown <https://t.me/bradthomasbrown>",
     "type": "module",
     "files": [
